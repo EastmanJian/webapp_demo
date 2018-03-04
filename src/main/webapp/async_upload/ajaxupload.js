@@ -1,6 +1,8 @@
 var dropzone;
 
-
+/**
+ * init the dropzone allowing drag and drop files in it.
+ */
 window.onload = function () {
     dropzone = document.getElementById("dropzone");
     dropzone.ondragover = dropzone.ondragenter = function (event) {
@@ -23,6 +25,10 @@ window.onload = function () {
     }
 }
 
+/**
+ * show the dropped files' name and size in the dropzone
+ * @param files
+ */
 function showFiles(files) {
     dropzone.innerHTML = "";
     var list = document.createElement("ul");
@@ -45,6 +51,9 @@ function showFiles(files) {
     dropzone.appendChild(UploadBtn);
 }
 
+/**
+ * wrapper function to call FileUpload for the list of files
+ */
 function sendFiles() {
     document.getElementById("UploadBtn").style.display = "none";
     var items = document.querySelectorAll(".obj");
@@ -54,6 +63,13 @@ function sendFiles() {
     }
 }
 
+/**
+ * FileUpload Object.
+ * use XMLHttpRequest and FormData to POST file to server
+ * @param item - the file UI item
+ * @param file - the file object
+ * @constructor
+ */
 function FileUpload(item, file) {
     this.ctrl = createThrobber(item);
     var xhr = new XMLHttpRequest();
@@ -88,7 +104,11 @@ function FileUpload(item, file) {
 
 }
 
-
+/**
+ * create the progress Throbber
+ * @param item
+ * @returns {Throbber}
+ */
 function createThrobber(item) {
     var progress = document.createElement("span");
     progress.innerText = "[0%] ";
@@ -97,6 +117,11 @@ function createThrobber(item) {
     return new Throbber(progress);
 }
 
+/**
+ * Throbber Object
+ * @param element - the element to display the throbber (use text progress here only for demo)
+ * @constructor
+ */
 function Throbber(element) {
     this.element = element;
     this.update = function (percentage) {

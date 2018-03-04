@@ -53,20 +53,23 @@ public class FileUploadServlet extends HttpServlet {
         final PrintWriter writer = response.getWriter();
 
         try {
-            out = new FileOutputStream(new File(path + File.separator
-                    + fileName));
-            filecontent = filePart.getInputStream();
+            File file = new File(path + File.separator + fileName);
+            if (file.exists()) {
+                writer.println("File " + path + File.separator + fileName + " already exists.");
+            } else {
+                out = new FileOutputStream(file);
+                filecontent = filePart.getInputStream();
 
-            int read;
-            final byte[] bytes = new byte[1024];
+                int read;
+                final byte[] bytes = new byte[1024];
 
-            while ((read = filecontent.read(bytes)) != -1) {
-                out.write(bytes, 0, read);
+                while ((read = filecontent.read(bytes)) != -1) {
+                    out.write(bytes, 0, read);
+                }
+                writer.println("New file " + path + File.separator + fileName + " created.");
+                LOGGER.log(Level.INFO, "File {0} being uploaded to {1}",
+                        new Object[]{fileName, path});
             }
-            writer.println("New file " + fileName + " created at " + path);
-            LOGGER.log(Level.INFO, "File {0} being uploaded to {1}",
-                    new Object[]{fileName, path});
-
         } catch (FileNotFoundException fne) {
             writer.println("You either did not specify a file to upload or are "
                     + "trying to upload a file to a protected or nonexistent "
