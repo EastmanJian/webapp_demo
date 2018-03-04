@@ -82,7 +82,7 @@ function FileUpload(img, file) {
     reader.onload = function(evt) {
         xhr.send(evt.target.result);
     };
-    reader.readAsBinaryString(file); //Todo: debug - Failed to execute 'readAsBinaryString' on 'FileReader': parameter 1 is not of type 'Blob'.
+    reader.readAsBinaryString(file); //Todo: debug - Failed to execute 'readAsBinaryString' on 'FileReader': parameter 1 is not of type 'Blob'. Alternative: use FormData like ajaxupload.html
 }
 
 
