@@ -1,4 +1,4 @@
-package fileupload;
+package filetransfer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,7 +20,7 @@ import javax.servlet.http.Part;
 /**
  * File upload servlet example
  */
-@WebServlet(name = "FileUploadServlet", urlPatterns = {"/file_upload/upload"})
+@WebServlet(name = "FileUploadServlet", urlPatterns = {"/file_tran/upload"})
 @MultipartConfig
 public class FileUploadServlet extends HttpServlet {
 

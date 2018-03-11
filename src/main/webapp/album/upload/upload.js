@@ -77,7 +77,7 @@ function FileUpload(img, file) {
         var canvas = self.ctrl.ctx.canvas;
         canvas.parentNode.removeChild(canvas);
     }, false);
-    xhr.open("POST", "/webapp_demo/file_upload/upload");
+    xhr.open("POST", "/webapp_demo/file_tran/upload");
     xhr.overrideMimeType('text/plain; charset=utf-8');
     reader.onload = function(evt) {
         xhr.send(evt.target.result);

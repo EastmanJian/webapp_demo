@@ -79,8 +79,8 @@ function FileUpload(item, file) {
     };
 
 
-    xhr.open("POST", "/webapp_demo/file_upload/upload", true);
-    fd.append('destination', '/home/eastman');
+    xhr.open("POST", "/webapp_demo/file_tran/upload", true);
+    fd.append('destination', '/srv/www/htdocs/userfiles');
     fd.append('file', file);
 
     xhr.send(fd);
