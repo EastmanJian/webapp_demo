@@ -16,8 +16,8 @@
     <h4>Session ID: <span id="sessionID"></span></h4>
     <h5>Total Users:<span id="Users"></span></h5>
     <h5>Total Robots:<span id="Robots"></span></h5>
-    LAN ID:<input type="text" id="lanID"/>
-    Check In Action: <h3 id="robotAction"></h3>
+    <h15>LAN ID:<span id="lanID"></span></h15>
+    <h4>Check In Action: <span id="robotAction"></span></h4>
     <input type="text" id="msgInput"/>
     <button onclick="sendMsg()">Send</button>
     <button onclick="closeCon()">Quit</button>
@@ -28,38 +28,53 @@
 <script>
 
     var ws = new WebSocket("wss://eastmanjian.cn/webapp_demo/timeClock");
-    var pattSessionID = /session_ID: /;
-    var pattUserCnt = /Total users: /;
-    var pattRobotCnt = /Total robots: /;
+    var regexpSessionID = /session_ID: /;
+    var regexpUserCnt = /Total users: /;
+    var regexpRobotCnt = /Total robots: /;
+    var regexpCheckIn = /^.*Hi Robot, please help me check in. My Lan ID is: /;
+    var regexpSuccessful = /Clock in successfully/i;
     var msgbox = document.getElementById("msgDiag");
+    var urlPara = location.search;
+    var regexpLanID = /^.*LanID=/;
+    var lanID = urlPara.replace(regexpLanID, "");
+    document.getElementById("lanID").innerText = lanID;
 
 
-    ws.onopen = function(evt) {
+    ws.onopen = function (evt) {
         log("Connected to Time Clock Bridge.");
         ws.send("-----ROBOT-----");
     };
 
-    ws.onmessage = function(evt) {
+    ws.onmessage = function (evt) {
         let msg = evt.data;
         log(msg);
 
         //if the msg contains the current user session ID information, update it in the panel.
-        if (pattSessionID.test(msg)) {
-            document.getElementById("sessionID").innerText = msg.replace(pattSessionID, "");
+        if (regexpSessionID.test(msg)) {
+            document.getElementById("sessionID").innerText = msg.replace(regexpSessionID, "");
         }
 
         //if the msg contains the number of users information, update it in the panel.
-        if (pattUserCnt.test(msg)) {
-            document.getElementById("Users").innerText = msg.replace(pattUserCnt, "");
+        if (regexpUserCnt.test(msg)) {
+            document.getElementById("Users").innerText = msg.replace(regexpUserCnt, "");
         }
 
         //if the msg contains the number of users information, update it in the panel.
-        if (pattRobotCnt.test(msg)) {
-            document.getElementById("Robots").innerText = msg.replace(pattRobotCnt, "");
+        if (regexpRobotCnt.test(msg)) {
+            document.getElementById("Robots").innerText = msg.replace(regexpRobotCnt, "");
         }
+
+        //if the msg is asking for check in.
+        if (regexpCheckIn.test(msg)) {
+            let requestLanID = msg.replace(regexpCheckIn, "");
+            if (lanID == requestLanID) {
+                document.getElementById("robotAction").innerText = "TapCard";
+            }
+        }
+
     };
 
-    ws.onclose = function(evt) {
+    ws.onclose = function (evt) {
         log("Quit the bridge.");
     };
 
@@ -67,6 +82,11 @@
     function sendMsg() {
         let msg = document.getElementById("msgInput").value;
         ws.send(msg);
+
+        //if the msg indicates check in successfully, update the action field.
+        if (regexpSuccessful.test(msg)) {
+            document.getElementById("robotAction").innerText = "Done.";
+        }
     }
 
     function log(msg) {

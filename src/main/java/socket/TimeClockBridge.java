@@ -54,17 +54,19 @@ public class TimeClockBridge {
                 userSession.getBasicRemote().sendText("Total robots: " + robots.size());
             }
             for (Session robotSession : robots) {
-                robotSession.getBasicRemote().sendText("New user [" + session.getId().substring(24) + "] joined the bridge.");
+                robotSession.getBasicRemote().sendText("New " + role + "[" + session.getId().substring(24) + "] joined the bridge.");
                 robotSession.getBasicRemote().sendText("Total users: " + users.size());
                 robotSession.getBasicRemote().sendText("Total robots: " + robots.size());
             }
         } else {
+            //get the role of the client
+            String role = users.contains(session)? "User" : "Robot";
             //broadcast the msg to all clients in the bridge
             for (Session userSession : users) {
-                userSession.getBasicRemote().sendText("[" + session.getId().substring(24) + "] " + msg);
+                userSession.getBasicRemote().sendText("[" + role + "-" + session.getId().substring(24) + "] " + msg);
             }
             for (Session robotSession : robots) {
-                robotSession.getBasicRemote().sendText("[" + session.getId().substring(24) + "] " + msg);
+                robotSession.getBasicRemote().sendText("[" + role + "-" + session.getId().substring(24) + "] " + msg);
             }
         }
     }
