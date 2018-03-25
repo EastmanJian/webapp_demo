@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Time Clock Bridge</title>
+    <style>
+        #msgDiag {
+            width: 100%;
+            height: 20em;
+        }
+    </style>
+</head>
+<body>
+<h2>Time Clock (Robot Interface)</h2>
+<section>
+    <h4>Session ID: <span id="sessionID"></span></h4>
+    <h5>Total Users:<span id="Users"></span></h5>
+    <h5>Total Robots:<span id="Robots"></span></h5>
+    LAN ID:<input type="text" id="lanID"/>
+    Check In Action: <h3 id="robotAction"></h3>
+    <input type="text" id="msgInput"/>
+    <button onclick="sendMsg()">Send</button>
+    <button onclick="closeCon()">Quit</button>
+
+</section>
+<textarea id="msgDiag">
+</textarea>
+<script>
+
+    var ws = new WebSocket("wss://eastmanjian.cn/webapp_demo/timeClock");
+    var pattSessionID = /session_ID: /;
+    var pattUserCnt = /Total users: /;
+    var pattRobotCnt = /Total robots: /;
+    var msgbox = document.getElementById("msgDiag");
+
+
+    ws.onopen = function(evt) {
+        log("Connected to Time Clock Bridge.");
+        ws.send("-----ROBOT-----");
+    };
+
+    ws.onmessage = function(evt) {
+        let msg = evt.data;
+        log(msg);
+
+        //if the msg contains the current user session ID information, update it in the panel.
+        if (pattSessionID.test(msg)) {
+            document.getElementById("sessionID").innerText = msg.replace(pattSessionID, "");
+        }
+
+        //if the msg contains the number of users information, update it in the panel.
+        if (pattUserCnt.test(msg)) {
+            document.getElementById("Users").innerText = msg.replace(pattUserCnt, "");
+        }
+
+        //if the msg contains the number of users information, update it in the panel.
+        if (pattRobotCnt.test(msg)) {
+            document.getElementById("Robots").innerText = msg.replace(pattRobotCnt, "");
+        }
+    };
+
+    ws.onclose = function(evt) {
+        log("Quit the bridge.");
+    };
+
+
+    function sendMsg() {
+        let msg = document.getElementById("msgInput").value;
+        ws.send(msg);
+    }
+
+    function log(msg) {
+        msgbox.append(msg + "\n");
+        msgbox.scrollTop = msgbox.scrollHeight;
+    }
+
+    function closeCon() {
+        ws.close();
+    }
+</script>
+
+</body>
+</html>
