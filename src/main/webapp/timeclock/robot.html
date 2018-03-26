@@ -8,6 +8,8 @@
             width: 100%;
             height: 20em;
         }
+
+
     </style>
 </head>
 <body>
@@ -16,8 +18,8 @@
     <h4>Session ID: <span id="sessionID"></span></h4>
     <h5>Total Users:<span id="Users"></span></h5>
     <h5>Total Robots:<span id="Robots"></span></h5>
-    <h15>LAN ID:<span id="lanID"></span></h15>
-    <h4>Check In Action: <span id="robotAction"></span></h4>
+    <h15>LAN ID:<input type="text" id="lanID"/></h15>
+    <h4>Check In Action: <input type="text" id="robotAction" disabled="true"></input></h4>
     <input type="text" id="msgInput"/>
     <button onclick="sendMsg()">Send</button>
     <button onclick="closeCon()">Quit</button>
@@ -37,7 +39,7 @@
     var urlPara = location.search;
     var regexpLanID = /^.*LanID=/;
     var lanID = urlPara.replace(regexpLanID, "");
-    document.getElementById("lanID").innerText = lanID;
+    document.getElementById("lanID").value = lanID;
 
 
     ws.onopen = function (evt) {
@@ -68,7 +70,7 @@
         if (regexpCheckIn.test(msg)) {
             let requestLanID = msg.replace(regexpCheckIn, "");
             if (lanID == requestLanID) {
-                document.getElementById("robotAction").innerText = "TapCard";
+                document.getElementById("robotAction").value = "TapCard";
             }
         }
 
@@ -85,7 +87,7 @@
 
         //if the msg indicates check in successfully, update the action field.
         if (regexpSuccessful.test(msg)) {
-            document.getElementById("robotAction").innerText = "Done.";
+            document.getElementById("robotAction").value = "Done";
         }
     }
 
