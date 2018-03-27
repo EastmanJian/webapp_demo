@@ -27,7 +27,8 @@ public class WebSocketChatRoom {
             //broadcast to all users the message about new user's joining
             for (Session userSession : users) {
                 userSession.getBasicRemote().sendText("Welcome, new user joined the chat room with session ID="
-                        + session.getId() + ". Thread Name=" + Thread.currentThread().getName());
+                        + session.getId() + ". Thread Name=" + Thread.currentThread().getName()
+                        + ". ChatRoom instance=" + this.hashCode());
                 userSession.getBasicRemote().sendText("Total users: " + users.size());
             }
         } catch (IOException e) {
@@ -56,7 +57,7 @@ public class WebSocketChatRoom {
         try {
             //broadcast the msg to all users in the chat room
             for (Session userSession : users) {
-                userSession.getBasicRemote().sendText("[" + session.getId() + "] " + msg);
+                userSession.getBasicRemote().sendText("[" + session.getId().substring(24)  + "] " + msg);
             }
         } catch (IOException e) {
             e.printStackTrace();
