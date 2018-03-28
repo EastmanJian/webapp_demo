@@ -19,7 +19,7 @@
     <h5>Total Users:<span id="Users"></span></h5>
     <h5>Total Robots:<span id="Robots"></span></h5>
     <h15>LAN ID:<input type="text" id="lanID"/></h15>
-    <h4>Check In Action: <input type="text" id="robotAction" disabled="true"></input></h4>
+    <h4>Check In Action: <input type="text" id="robotAction" readonly="true"/></h4>
     <input type="text" id="msgInput"/>
     <button onclick="sendMsg()">Send</button>
     <button onclick="closeCon()">Quit</button>
@@ -69,7 +69,8 @@
         //if the msg is asking for check in.
         if (regexpCheckIn.test(msg)) {
             let requestLanID = msg.replace(regexpCheckIn, "");
-            if (lanID == requestLanID) {
+            let currentLanID = document.getElementById("lanID").value;
+            if (currentLanID.toUpperCase() === requestLanID.toUpperCase()) {
                 document.getElementById("robotAction").value = "TapCard";
             }
         }
