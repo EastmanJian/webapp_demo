@@ -16,14 +16,14 @@ public class TimeClockBridge {
     }
 
     @OnOpen
-    public void onopen(Session session) throws IOException{
+    public void onOpen(Session session) throws IOException{
         System.out.println("TimeClockBridge connected successfully. SessionID=" + session.getId());
         //tell the new user/robot the session id.
             session.getBasicRemote().sendText("session_ID: " + session.getId());
     }
 
     @OnClose
-    public void onclose(Session session) throws IOException {
+    public void onClose(Session session) throws IOException {
         System.out.println("TimeClockBridge session:" + session.getId() + " closed.");
         users.remove(session);
         robots.remove(session);
@@ -58,6 +58,13 @@ public class TimeClockBridge {
                 robotSession.getBasicRemote().sendText("Total users: " + users.size());
                 robotSession.getBasicRemote().sendText("Total robots: " + robots.size());
             }
+        } else if (msg.equals("Close All Robot Connections!")) {
+            List<Session> currentRobots = new Vector<>(robots);
+            for (Session robotSession : currentRobots) {
+                robotSession.close();
+            }
+        } else if (msg.equals("Robot heartbeat.")) {
+            session.getBasicRemote().sendText("echo: " + msg);
         } else {
             //get the role of the client
             String role = users.contains(session)? "User" : "Robot";

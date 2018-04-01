@@ -18,89 +18,17 @@
     <h4>Session ID: <span id="sessionID"></span></h4>
     <h5>Total Users:<span id="Users"></span></h5>
     <h5>Total Robots:<span id="Robots"></span></h5>
-    <h15>LAN ID:<input type="text" id="lanID"/></h15>
+    <h5>Login LAN ID:<input type="text" id="loginLanID"/></h5>
+    <h5>Check LAN ID:<input type="text" id="checkLanID"/></h5>
     <h4>Check In Action: <input type="text" id="robotAction" readonly="true"/></h4>
     <input type="text" id="msgInput"/>
     <button onclick="sendMsg()">Send</button>
     <button onclick="closeCon()">Quit</button>
-
+    <button onclick="closeAllRobotCon()">Quit All Robots</button>
 </section>
 <textarea id="msgDiag">
 </textarea>
-<script>
-
-    var ws = new WebSocket("wss://eastmanjian.cn/webapp_demo/timeClock");
-    var regexpSessionID = /session_ID: /;
-    var regexpUserCnt = /Total users: /;
-    var regexpRobotCnt = /Total robots: /;
-    var regexpCheckIn = /^.*Hi Robot, please help me check in. My Lan ID is: /;
-    var regexpSuccessful = /Clock in successfully/i;
-    var msgbox = document.getElementById("msgDiag");
-    var urlPara = location.search;
-    var regexpLanID = /^.*LanID=/;
-    var lanID = urlPara.replace(regexpLanID, "");
-    document.getElementById("lanID").value = lanID;
-
-
-    ws.onopen = function (evt) {
-        log("Connected to Time Clock Bridge.");
-        ws.send("-----ROBOT-----");
-    };
-
-    ws.onmessage = function (evt) {
-        let msg = evt.data;
-        log(msg);
-
-        //if the msg contains the current user session ID information, update it in the panel.
-        if (regexpSessionID.test(msg)) {
-            document.getElementById("sessionID").innerText = msg.replace(regexpSessionID, "");
-        }
-
-        //if the msg contains the number of users information, update it in the panel.
-        if (regexpUserCnt.test(msg)) {
-            document.getElementById("Users").innerText = msg.replace(regexpUserCnt, "");
-        }
-
-        //if the msg contains the number of users information, update it in the panel.
-        if (regexpRobotCnt.test(msg)) {
-            document.getElementById("Robots").innerText = msg.replace(regexpRobotCnt, "");
-        }
-
-        //if the msg is asking for check in.
-        if (regexpCheckIn.test(msg)) {
-            let requestLanID = msg.replace(regexpCheckIn, "");
-            let currentLanID = document.getElementById("lanID").value;
-            if (currentLanID.toUpperCase() === requestLanID.toUpperCase()) {
-                document.getElementById("robotAction").value = "TapCard";
-            }
-        }
-
-    };
-
-    ws.onclose = function (evt) {
-        log("Quit the bridge.");
-    };
-
-
-    function sendMsg() {
-        let msg = document.getElementById("msgInput").value;
-        ws.send(msg);
-
-        //if the msg indicates check in successfully, update the action field.
-        if (regexpSuccessful.test(msg)) {
-            document.getElementById("robotAction").value = "Done";
-        }
-    }
-
-    function log(msg) {
-        msgbox.value += msg + "\n";
-        msgbox.scrollTop = msgbox.scrollHeight;
-    }
-
-    function closeCon() {
-        ws.close();
-    }
-</script>
+<script src="robot.js"></script>
 
 </body>
 </html>
