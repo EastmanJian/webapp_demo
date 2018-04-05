@@ -18,7 +18,7 @@ document.getElementById("checkLanID").value = lanID;
 
 initBridge();
 
-setInterval(keepConnection, 5 * 1000);
+setInterval(keepConnection, 300 * 1000);
 
 function initBridge() {
     ws = new WebSocket(webSocketUrl);
