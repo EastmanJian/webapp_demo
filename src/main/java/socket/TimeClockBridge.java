@@ -30,13 +30,13 @@ public class TimeClockBridge {
         //tell all clients in the bridge that a user/robot has quit.
         for (Session userSession : users) {
             userSession.getBasicRemote().sendText("[" + session.getId().substring(24) + "] has quit.");
-            userSession.getBasicRemote().sendText("Total users: " + users.size());
-            userSession.getBasicRemote().sendText("Total robots: " + robots.size());
+            userSession.getBasicRemote().sendText("Total online users: " + users.size());
+            userSession.getBasicRemote().sendText("Total online robots: " + robots.size());
         }
         for (Session robotSession : robots) {
             robotSession.getBasicRemote().sendText("[" + session.getId().substring(24) + "] has quit.");
-            robotSession.getBasicRemote().sendText("Total users: " + users.size());
-            robotSession.getBasicRemote().sendText("Total robots: " + robots.size());
+            robotSession.getBasicRemote().sendText("Total online users: " + users.size());
+            robotSession.getBasicRemote().sendText("Total online robots: " + robots.size());
         }
     }
 
@@ -50,13 +50,13 @@ public class TimeClockBridge {
             //broadcast to all clients the message about new user's joining
             for (Session userSession : users) {
                 userSession.getBasicRemote().sendText("New " + role + "[" + session.getId().substring(24) + "] joined the bridge.");
-                userSession.getBasicRemote().sendText("Total users: " + users.size());
-                userSession.getBasicRemote().sendText("Total robots: " + robots.size());
+                userSession.getBasicRemote().sendText("Total online users: " + users.size());
+                userSession.getBasicRemote().sendText("Total online robots: " + robots.size());
             }
             for (Session robotSession : robots) {
                 robotSession.getBasicRemote().sendText("New " + role + "[" + session.getId().substring(24) + "] joined the bridge.");
-                robotSession.getBasicRemote().sendText("Total users: " + users.size());
-                robotSession.getBasicRemote().sendText("Total robots: " + robots.size());
+                robotSession.getBasicRemote().sendText("Total online users: " + users.size());
+                robotSession.getBasicRemote().sendText("Total online robots: " + robots.size());
             }
         } else if (msg.equals("Close All Robot Connections!")) {
             List<Session> currentRobots = new Vector<>(robots);
