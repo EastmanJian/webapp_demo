@@ -33,8 +33,9 @@
 <body>
 <section id="mainInput" class="alignMid">
     <h1 class="alignMid">Time Clock</h1>
+    <h3>Please ensure you have arrived office before you check in.</h3>
     <h2>LAN ID:<input type="text" id="lanIDInput" onkeyup="validateLanID()" autofocus="true"/></h2>
-    <button onclick="checkIn()" id="chkInBtn" disabled="true">Check In</button>
+    <button onclick="checkIn()" id="chkInBtn">Check In</button>
 
 </section>
 <textarea id="msgDiag" class="maxWidth">
@@ -44,73 +45,11 @@
     <button onclick="sendMsg()">Send</button>
     <button onclick="closeCon()">Quit</button>
     <h4>Session ID: <span id="sessionID"></span></h4>
-    <h5>Total Users:<span id="Users"></span></h5>
-    <h5>Total Robots:<span id="Robots"></span></h5>
+    <h5>Total Online Users:<span id="Users"></span></h5>
+    <h5>Total Online Robots:<span id="Robots"></span></h5>
 </footer>
-<script>
+<script src="checkin.js">
 
-    var ws = new WebSocket("wss://eastmanjian.cn/webapp_demo/timeClock");
-    var pattSessionID = /session_ID: /;
-    var pattUserCnt = /Total users: /;
-    var pattRobotCnt = /Total robots: /;
-    var msgbox = document.getElementById("msgDiag");
-
-
-    ws.onopen = function (evt) {
-        log("Connected to Time Clock Bridge.");
-        ws.send("-----USER-----");
-    };
-
-    ws.onmessage = function (evt) {
-        let msg = evt.data;
-        log(msg);
-
-        //if the msg contains the current user session ID information, update it in the panel.
-        if (pattSessionID.test(msg)) {
-            document.getElementById("sessionID").innerText = msg.replace(pattSessionID, "");
-        }
-
-        //if the msg contains the number of users information, update it in the panel.
-        if (pattUserCnt.test(msg)) {
-            document.getElementById("Users").innerText = msg.replace(pattUserCnt, "");
-        }
-
-        //if the msg contains the number of users information, update it in the panel.
-        if (pattRobotCnt.test(msg)) {
-            document.getElementById("Robots").innerText = msg.replace(pattRobotCnt, "");
-        }
-    };
-
-    ws.onclose = function (evt) {
-        log("Quit the bridge.");
-    };
-
-
-    function checkIn() {
-        let lanID = document.getElementById("lanIDInput").value;
-        let msg = "Hi Robot, please help me check in. My Lan ID is: " + lanID;
-        ws.send(msg);
-    }
-
-    function sendMsg() {
-        let msg = document.getElementById("msgInput").value;
-        ws.send(msg);
-    }
-
-    function log(msg) {
-        msgbox.append(msg + "\n");
-        msgbox.scrollTop = msgbox.scrollHeight;
-    }
-
-    function closeCon() {
-        ws.close();
-    }
-
-    function validateLanID() {
-        let lanID = document.getElementById("lanIDInput").value;
-        let checkInBtn = document.getElementById("chkInBtn");
-        checkInBtn.disabled = (lanID == "") ? true : false;
-    }
 </script>
 
 </body>
