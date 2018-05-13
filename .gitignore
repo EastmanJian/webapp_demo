@@ -1,5 +1,6 @@
 # IntelliJ .idea folder
 .idea/
+webapp_demo.iml
 
 # build folder
 target/
