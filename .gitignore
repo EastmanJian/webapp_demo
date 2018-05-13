@@ -4,3 +4,6 @@ webapp_demo.iml
 
 # build folder
 target/
+
+#MAC file
+.*
