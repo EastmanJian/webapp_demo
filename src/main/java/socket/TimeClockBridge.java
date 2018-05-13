@@ -16,10 +16,10 @@ public class TimeClockBridge {
     }
 
     @OnOpen
-    public void onOpen(Session session) throws IOException{
+    public void onOpen(Session session) throws IOException {
         System.out.println("TimeClockBridge connected successfully. SessionID=" + session.getId());
         //tell the new user/robot the session id.
-            session.getBasicRemote().sendText("session_ID: " + session.getId());
+        session.getBasicRemote().sendText("session_ID: " + session.getId());
     }
 
     @OnClose
@@ -67,7 +67,7 @@ public class TimeClockBridge {
             session.getBasicRemote().sendText("echo: " + msg);
         } else {
             //get the role of the client
-            String role = users.contains(session)? "User" : "Robot";
+            String role = users.contains(session) ? "User" : "Robot";
             //broadcast the msg to all clients in the bridge
             for (Session userSession : users) {
                 userSession.getBasicRemote().sendText("[" + role + "-" + session.getId().substring(24) + "] " + msg);
